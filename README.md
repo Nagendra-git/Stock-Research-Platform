@@ -1,124 +1,98 @@
 # 📈 Stock Research & Quarterly Analysis Platform
 
-## Overview
-
-Stock Research & Quarterly Analysis Platform is a personal investment research application designed to help investors identify, track, and analyze fundamentally strong companies based on quarterly financial performance.
-
-Instead of scanning thousands of stocks every quarter, the application focuses on storing and analyzing a curated list of the top-performing companies identified through predefined screening criteria. By maintaining historical quarterly snapshots, the platform enables users to compare business performance over time and understand whether a company's fundamentals continue to improve.
-
-The project follows an incremental development approach. The initial version focuses on collecting and storing quarterly financial data, while future versions will introduce advanced analytics, custom stock screeners, portfolio tracking, automated data collection, and AI-powered insights.
+A personal investment research platform that helps you identify, track, and evaluate
+fundamentally strong companies — built around real quarterly financial data instead of gut
+feel or noisy market chatter.
 
 ---
 
-## Objectives
+## Table of Contents
 
-* Build a personal stock research platform.
-* Track companies across multiple quarters.
-* Compare financial performance over time.
-* Understand the relationship between fundamentals and stock price movement.
-* Create reusable screening strategies for identifying high-quality companies.
-* Learn financial statement analysis through hands-on software development.
-
----
-
-## Key Features (Current Version)
-
-* Store company information.
-* Store quarterly financial snapshots.
-* Maintain historical quarterly records.
-* View complete company history.
-* Compare quarterly performance.
-* Search companies by name or symbol.
-* REST APIs for managing companies and quarterly data.
-* MongoDB-based document storage.
+- [Why This Exists](#why-this-exists)
+- [What It Does](#what-it-does)
+- [Who It's For](#whos-it-for)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Design Principles](#design-principles)
+- [License](#license)
 
 ---
 
-## Planned Features
+## Why This Exists
 
-### Version 2
+Most investors either drown in data or rely on gut feel. Scanning thousands of stocks every
+quarter isn't practical for an individual, and generic screeners don't capture the specific
+things you actually care about. This platform takes a narrower, more disciplined approach:
+maintain a **curated list of companies worth watching**, and build a rigorous, quarter-over-
+quarter picture of their financial health — so decisions are grounded in trends, not a single
+snapshot.
 
-* Financial ratio calculations (ROE, ROCE, Debt-to-Equity, Profit Margin, etc.)
-* Quarterly comparison reports
-* Growth trend analysis
+## What It Does
 
-### Version 3
+**Company & Quarterly Data Management**
+Maintain a personal database of companies you track, along with a full history of their
+quarterly financial results — revenue, profit, and the other fundamentals that matter.
 
-* Interactive dashboards
-* Revenue, Profit, ROCE, and Price charts
-* Company performance visualization
+**Trend-Based Analysis**
+Go beyond a single quarter's numbers. Compare performance across time to see whether a
+company's fundamentals are genuinely improving, holding steady, or deteriorating.
 
-### Version 4
+**Fast, Focused Search**
+Find any tracked company instantly by name or symbol, without digging through spreadsheets or
+scattered notes.
 
-* Python-based data import pipeline
-* Automated quarterly data synchronization
-* Historical price collection
+**Financial Ratio Intelligence**
+Automatically calculate the ratios that matter for quality investing — ROE, ROCE,
+Debt-to-Equity, Profit Margins — so you spend time interpreting, not computing.
 
-### Version 5
+**Visual, Data-Driven Dashboards**
+See revenue, profit, and return trends as charts, not rows in a table, making it far easier to
+spot inflection points and sustained growth.
 
-* Custom screener engine
-* User-defined filtering rules
-* Saved screening templates
+**Automated Data Collection**
+Reduce manual data entry through automated import pipelines that keep your tracked companies'
+financials current with minimal effort.
 
-### Version 6
+**Custom Screening**
+Define your own filtering rules to identify companies that meet your specific investment
+criteria, and save them as reusable templates.
 
-* Watchlists
-* Quarterly alerts
-* Earnings notifications
+**Watchlists & Alerts**
+Organize companies into themed watchlists and get notified when new quarterly results or
+notable changes land.
 
-### Version 7
+**Historical Price & Risk Analysis**
+Layer in historical price data to understand how fundamentals have actually translated into
+returns — and at what level of risk.
 
-* Historical price analysis
-* Performance tracking
-* Risk and return metrics
+**Company Scoring**
+Get objective, composite scores — quality, growth, value, and momentum — that let you rank and
+compare companies at a glance instead of re-deriving a view from scratch every time.
 
-### Version 8
+**AI-Assisted Research**
+Ask natural-language questions about your tracked companies, get plain-English fundamental
+summaries, and compare companies side by side without manually cross-referencing spreadsheets.
 
-* Company scoring engine
-* Fundamental quality score
-* Growth score
-* Value score
-* Momentum score
+## Who It's For
 
-### Version 9
+This is a **personal investment companion**, purpose-built for an individual investor who wants
+to:
 
-* AI-assisted investment research
-* Company comparison
-* Fundamental summaries
-* Natural language search
+- Apply consistent, repeatable criteria to every company they track.
+- Understand a business's trajectory, not just its most recent quarter.
+- Combine software engineering, financial analysis, and data-driven decision-making into a
+  single tool they fully own and control.
 
----
+## Tech Stack
 
-## Technology Stack
+**Backend:** Java, Spring Boot, Spring Data MongoDB, Maven
+**Database:** MongoDB
+**Frontend:** React, Material UI, React Router
+**Data Collection:** Python, pandas, requests, BeautifulSoup, yfinance / NSE-compatible sources
 
-### Backend
-
-* Java
-* Spring Boot
-* Spring Data MongoDB
-* Maven
-
-### Database
-
-* MongoDB
-
-### Frontend
-
-* React
-* Material UI
-* React Router
-
-### Data Collection
-
-* Python
-* pandas
-* requests
-* BeautifulSoup (when required)
-* yfinance / NSE-compatible data sources
-
----
-
-## High-Level Architecture
+## Architecture
 
 ```text
                  +----------------------+
@@ -126,7 +100,6 @@ The project follows an incremental development approach. The initial version foc
                  +----------+-----------+
                             |
                         Python Importer
-                            |
                             |
                      Spring Boot REST API
                             |
@@ -137,27 +110,70 @@ The project follows an incremental development approach. The initial version foc
                      React Dashboard
 ```
 
----
+## Getting Started
 
-## Development Philosophy
+### Prerequisites
 
-This project is intentionally built using an iterative approach.
+- Java 17+
+- Maven 3.9+
+- MongoDB 6+ (local instance or Atlas)
+- Node.js 18+ and npm
+- Python 3.10+ (for data import scripts)
 
-Rather than attempting to build a complete stock market platform from the beginning, each version introduces one meaningful capability while keeping the codebase clean, maintainable, and extensible.
+### Backend Setup
 
-The goal is not simply to collect stock market data but to develop a repeatable investment research workflow that improves over time through historical analysis and continuous refinement.
+```bash
+git clone <your-repo-url>
+cd stock-research-platform/backend
 
----
+# configure MongoDB connection
+# src/main/resources/application.properties
+# spring.data.mongodb.uri=mongodb://localhost:27017/stockresearch
 
-## Long-Term Vision
+mvn clean install
+mvn spring-boot:run
+```
 
-Create a comprehensive stock research platform capable of:
+The API will be available at `http://localhost:8080`.
 
-* Tracking quarterly business performance.
-* Monitoring company fundamentals.
-* Evaluating historical screening strategies.
-* Identifying companies with consistently improving financial performance.
-* Supporting data-driven investment decisions through analytics and automation.
+### Frontend Setup
 
-Ultimately, the platform aims to become a personal investment companion that combines software engineering, financial analysis, and data science into a single, extensible ecosystem.
-# Stock-Research-Platform
+```bash
+cd stock-research-platform/frontend
+npm install
+npm start
+```
+
+The app will be available at `http://localhost:3000`.
+
+## Project Structure
+
+```text
+stock-research-platform/
+├── backend/
+│   ├── src/main/java/.../company/
+│   ├── src/main/java/.../quarterlydata/
+│   └── src/main/resources/application.properties
+├── frontend/
+│   ├── src/components/
+│   ├── src/pages/
+│   └── src/services/
+├── data-import/            # Python scripts
+├── User_Stories_Backlog.xlsx
+└── README.md
+```
+
+## Design Principles
+
+- **Fundamentals over noise.** Every feature ties back to real financial data, not sentiment
+  or speculation.
+- **Trends over snapshots.** A single good quarter means little; the platform is built to
+  reveal sustained direction.
+- **Own your data, own your process.** No black-box recommendations — every score, ratio, and
+  flag is transparent and explainable.
+- **Built to last.** A clean, extensible codebase that can grow in capability without becoming
+  unmaintainable.
+
+## License
+
+Personal project — license to be decided (add MIT/Apache-2.0 if you plan to open-source it).
