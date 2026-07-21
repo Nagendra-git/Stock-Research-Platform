@@ -1,6 +1,7 @@
 package com.nagendra.platform.controller;
 
 import com.nagendra.platform.dto.AddStockRequestDto;
+import com.nagendra.platform.dto.BoughtStockDto;
 import com.nagendra.platform.dto.client.MarketQuoteResponse;
 import com.nagendra.platform.service.StockService;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +31,12 @@ public class StockController {
   @GetMapping
   public ResponseEntity<MarketQuoteResponse> getStocksInfo() {
     return new ResponseEntity<>(stockService.getStockInfo(), HttpStatus.OK);
+  }
+
+  @PutMapping("/{stockId}")
+  public ResponseEntity<String> updateStockData(
+      @PathVariable final String stockId, @RequestBody BoughtStockDto boughtStockDto) {
+    stockService.updateStockData(stockId, boughtStockDto);
+    return new ResponseEntity<>("Stock updated successfully", HttpStatus.OK);
   }
 }
