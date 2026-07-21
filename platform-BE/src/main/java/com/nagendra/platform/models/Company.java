@@ -26,5 +26,7 @@ public class Company extends Audit {
 
   private Double stockPrice;
 
-  private Double averagePrice;
+  private Double boughtPrice;
+
+  private Long quantity;
 }
