@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Akme Fintrade",
+        "current_price": "9.46",
+        "market_cap": "416.00",
+        "pe": "9.83",
+        "roce": "13.87"
+    },
+    {
+        "name": "Regency Fincorp",
+        "current_price": "43.73",
+        "market_cap": "388.52",
+        "pe": "28.95",
+        "roce": "10.51"
+    },
+    {
+        "name": "Dar Credit & Cap",
+        "current_price": "48.45",
+        "market_cap": "69.17",
+        "pe": "6.83",
+        "roce": "13.39"
+    },
+    {
+        "name": "Enbee Trade",
+        "current_price": "0.29",
+        "market_cap": "51.39",
+        "pe": "4.10",
+        "roce": "16.04"
+    }
+]
