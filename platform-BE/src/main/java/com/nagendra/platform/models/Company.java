@@ -24,7 +24,7 @@ public class Company extends Audit {
 
   private String instrumentKey;
 
-  private Float stockPrice;
+  private Double stockPrice;
 
-  private StockCategoryMapping stockCategory;
+  private Double averagePrice;
 }

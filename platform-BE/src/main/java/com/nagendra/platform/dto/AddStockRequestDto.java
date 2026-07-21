@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class AddStockRequestDto {
-    private List<String> names;
-    private String stockCategory;
+  List<StockRequestDto> stocks;
+  private String stockCategory;
 }

@@ -12,9 +12,7 @@ public class InstrumentData {
 
   private String exchange;
 
-  private String expiry;
-
-  private boolean weekly;
+  private String isin;
 
   @JsonProperty("instrument_key")
   private String instrumentKey;
@@ -37,21 +35,6 @@ public class InstrumentData {
   @JsonProperty("freeze_quantity")
   private Double freezeQuantity;
 
-  @JsonProperty("underlying_key")
-  private String underlyingKey;
-
-  @JsonProperty("underlying_type")
-  private String underlyingType;
-
-  @JsonProperty("underlying_symbol")
-  private String underlyingSymbol;
-
-  @JsonProperty("strike_price")
-  private Double strikePrice;
-
   @JsonProperty("qty_multiplier")
   private Integer qtyMultiplier;
-
-  @JsonProperty("minimum_lot")
-  private Integer minimumLot;
 }

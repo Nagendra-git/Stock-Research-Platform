@@ -18,8 +18,7 @@ public interface CompanyMapper {
   }
 
   @Mapping(target = "companyName", source = "name")
-  @Mapping(target = "symbol", source = "underlyingSymbol")
-  @Mapping(target = "stockPrice", source = "strikePrice")
-  @Mapping(target = "isin", source = "underlyingKey", qualifiedByName = "extractIsin")
+  @Mapping(target = "symbol", source = "tradingSymbol")
+  @Mapping(target = "isin", source = "isin")
   Company toCompany(InstrumentData instrumentData);
 }
