@@ -4,7 +4,11 @@ import com.nagendra.platform.models.StockCategoryMapping;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface StockCategoryMappingRepository extends MongoRepository<StockCategoryMapping, String> {
+import java.util.Optional;
 
+@Repository
+public interface StockCategoryMappingRepository
+    extends MongoRepository<StockCategoryMapping, String> {
+
+  Optional<StockCategoryMapping> findByStockId(String id);
 }
