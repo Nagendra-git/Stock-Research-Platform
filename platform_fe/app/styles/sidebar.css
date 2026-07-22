@@ -1,0 +1,96 @@
+.sidebar {
+  flex: 0 0 260px;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1c1633 0%, #120d24 100%);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px 20px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e94db0, #7c5cff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-mark svg {
+  width: 16px;
+  height: 16px;
+}
+
+.brand-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f2f0f8;
+  letter-spacing: -0.01em;
+}
+
+.nav-group {
+  margin-bottom: 16px;
+}
+
+.nav-group-title {
+  padding: 0 10px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #5f5b74;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 4px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #7b7690;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f2f0f8;
+}
+
+.nav-link.active {
+  background: linear-gradient(90deg, #d444a8, #7c5cff);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(124, 92, 255, 0.35);
+}
+
+.nav-icon {
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  color: inherit;
+}
