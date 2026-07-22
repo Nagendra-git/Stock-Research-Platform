@@ -45,6 +45,8 @@ jobs:
 
           target: "/home/ec2-user/apps/my-spring-app"
 
+          strip_components: 2
+
 
       - name: Restart Application
         uses: appleboy/ssh-action@v1
