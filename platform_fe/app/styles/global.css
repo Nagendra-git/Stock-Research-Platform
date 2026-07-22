@@ -1,0 +1,25 @@
+:root {
+  --bg-color: #021b35;
+  --text-color: white;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;      /* was min-height — this pins it, not just a floor */
+  overflow: hidden;   /* stops the whole page from scrolling */
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.app-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;   /* scrolling lives here, not on the whole page */
+  padding: 24px;
+}
