@@ -5,10 +5,16 @@ on:
     branches:
       - main
 
+
 jobs:
   deploy:
 
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: platform-BE
+
 
     steps:
 
@@ -34,11 +40,13 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "target/*.jar"
+
+          source: "platform-BE/target/platform-0.0.1-SNAPSHOT.jar"
+
           target: "/home/ec2-user/apps/my-spring-app"
 
 
-      - name: Restart Spring Boot Service
+      - name: Restart Application
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -47,4 +55,3 @@ jobs:
 
           script: |
             sudo systemctl restart my-spring-app
-            sudo systemctl status my-spring-app
