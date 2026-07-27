@@ -28,6 +28,16 @@ public class StockCategoryMappingServiceImpl implements StockCategoryMappingServ
     mappingRepository.deleteById(categoryMapping.getId());
   }
 
+  @Override
+  public List<StockCategoryMapping> getStockCategoryMappings() {
+    return mappingRepository.findAll();
+  }
+
+  @Override
+  public void deleteAll(List<StockCategoryMapping> mappingsToRemove) {
+    mappingRepository.deleteAll(mappingsToRemove);
+  }
+
   private StockCategoryMapping getByStockId(String id) {
     return mappingRepository.findByStockId(id).orElseThrow();
   }

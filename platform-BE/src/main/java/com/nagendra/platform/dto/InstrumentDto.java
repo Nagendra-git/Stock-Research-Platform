@@ -1,18 +1,10 @@
-package com.nagendra.platform.dto.client;
+package com.nagendra.platform.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class InstrumentData {
-
-  private String name;
-
-  private String segment;
-
-  private String exchange;
-
-  private String isin;
+public class InstrumentDto {
 
   @JsonProperty("instrument_key")
   private String instrumentKey;
@@ -20,8 +12,13 @@ public class InstrumentData {
   @JsonProperty("exchange_token")
   private String exchangeToken;
 
-  @JsonProperty("trading_symbol")
+  @JsonProperty("tradingsymbol")
   private String tradingSymbol;
+
+  private String name;
+
+  @JsonProperty("last_price")
+  private Double lastPrice;
 
   @JsonProperty("tick_size")
   private Double tickSize;
@@ -32,12 +29,7 @@ public class InstrumentData {
   @JsonProperty("instrument_type")
   private String instrumentType;
 
-  @JsonProperty("freeze_quantity")
-  private Double freezeQuantity;
+  private String exchange;
 
-  @JsonProperty("qty_multiplier")
-  private Integer qtyMultiplier;
-
-  @JsonProperty("strike_price")
-  private Double strikePrice;
+  private String isin;
 }

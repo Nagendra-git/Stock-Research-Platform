@@ -12,21 +12,17 @@ public class Company extends Audit {
 
   @Id private String id;
 
-  private String companyName;
-
-  private String symbol;
-
-  private String exchange;
-
-  private String segment;
-
   private String isin;
-
-  private String instrumentKey;
 
   private Double stockPrice;
 
   private Double boughtPrice;
 
   private Long quantity;
+
+  private Boolean isMomentumScore;
+
+  private Boolean isFundamentalScore;
+
+  private Double expectedQuarterlyResults;
 }

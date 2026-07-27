@@ -7,4 +7,8 @@ public interface StockCategoryMappingService {
   void saveAll(List<StockCategoryMapping> categoryMappings);
 
   void removeStockCategory(String id);
+
+  List<StockCategoryMapping> getStockCategoryMappings();
+
+  void deleteAll(List<StockCategoryMapping> mappingsToRemove);
 }
