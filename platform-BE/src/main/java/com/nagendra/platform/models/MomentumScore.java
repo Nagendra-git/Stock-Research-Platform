@@ -17,9 +17,6 @@ public class MomentumScore extends Audit {
   private Double priceScore;
   private Double volumeScore;
   private Double trendScore;
-  private Double technicalScore;
-  private Double newsScore;
-  private Double relativeStrength;
   private Double momentumScore;
   private Double volatilityScore;
 }

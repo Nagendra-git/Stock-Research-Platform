@@ -1,5 +1,6 @@
 package com.nagendra.platform.service.impl;
 
+import com.nagendra.platform.dto.StockDetailsDto;
 import com.nagendra.platform.models.Instrument;
 import com.nagendra.platform.service.InstrumentService;
 import java.util.List;
@@ -40,5 +41,21 @@ public class InstrumentServiceImpl implements InstrumentService {
     List<Instrument> instruments = mongoTemplate.find(query, Instrument.class);
 
     return instruments.stream().map(Instrument::getInstrumentKey).collect(Collectors.toSet());
+  }
+
+  @Override
+  public String getInstrumentKey(StockDetailsDto stockDetails) {
+    Query query = new Query();
+
+    // Match both criteria exactly (Implicit AND)
+    query.addCriteria(
+        Criteria.where("tradingsymbol")
+            .is(stockDetails.getTradingSymbol())
+            .and("exchange")
+            .is(stockDetails.getExchange()));
+
+    // Execute the search against the stocks collection
+    List<Instrument> instruments = mongoTemplate.find(query, Instrument.class);
+    return instruments.isEmpty() ? "" : instruments.get(0).getInstrumentKey();
   }
 }

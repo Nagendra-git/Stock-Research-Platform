@@ -1,11 +1,12 @@
 package com.nagendra.platform.dto;
 
+import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class BoughtStockDto {
+public class SoldStockDto {
 
-  private Double boughtPrice;
+  private BigDecimal soldPrice;
 
   private Long quantity;
 }

@@ -98,7 +98,7 @@ public class CompanyActionServiceImpl implements CompanyActionService {
     for (Map.Entry<String, Quote> m : filteredQuotes.entrySet()) {
       Company company = new Company();
       company.setIsin(m.getValue().getInstrumentToken());
-      company.setStockPrice(m.getValue().getLastPrice());
+      company.setStockPrice(BigDecimal.valueOf(m.getValue().getLastPrice()));
       company.setIsMomentumScore(false);
       company.setIsFundamentalScore(false);
       companies.add(company);
