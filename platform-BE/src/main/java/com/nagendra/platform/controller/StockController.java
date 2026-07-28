@@ -3,7 +3,6 @@ package com.nagendra.platform.controller;
 import com.nagendra.platform.dto.AddStockRequestDto;
 import com.nagendra.platform.dto.SoldStockDto;
 import com.nagendra.platform.dto.StockStatistics;
-import com.nagendra.platform.dto.client.MarketQuoteResponse;
 import com.nagendra.platform.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,11 +26,6 @@ public class StockController {
   public ResponseEntity<String> deleteStock(@RequestParam final String id) {
     stockService.deleteStock(id);
     return new ResponseEntity<>("Successfully deleted", HttpStatus.OK);
-  }
-
-  @GetMapping
-  public ResponseEntity<MarketQuoteResponse> getStocksInfo() {
-    return new ResponseEntity<>(stockService.getStockInfo(), HttpStatus.OK);
   }
 
   @PutMapping("/{stockId}")
