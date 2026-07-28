@@ -1,7 +1,7 @@
 package com.nagendra.platform.service.impl;
 
 import com.nagendra.platform.dto.portfolio.*;
-import com.nagendra.platform.models.Company;
+import com.nagendra.platform.models.Stock;
 import com.nagendra.platform.service.PortfolioService;
 import com.nagendra.platform.service.StockService;
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class PortfolioServiceImpl implements PortfolioService {
   @Override
   public PortfolioResponseDto getPortfolioSummary() {
 
-    List<Company> stocks = stockService.getMyInvestmentStocks();
+    List<Stock> stocks = stockService.getMyInvestmentStocks();
 
     BigDecimal totalInvestment = BigDecimal.ZERO;
     BigDecimal totalCurrentValue = BigDecimal.ZERO;
@@ -35,7 +35,7 @@ public class PortfolioServiceImpl implements PortfolioService {
 
     List<StockGainLossDto> stockDtos = new ArrayList<>();
 
-    for (Company stock : stocks) {
+    for (Stock stock : stocks) {
 
       BigDecimal investment =
           stock.getBoughtPrice().multiply(BigDecimal.valueOf(stock.getQuantity()));

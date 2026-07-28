@@ -8,6 +8,7 @@ import com.nagendra.platform.enums.StockCategory;
 import com.nagendra.platform.filters.*;
 import com.nagendra.platform.models.Company;
 import com.nagendra.platform.models.MomentumScore;
+import com.nagendra.platform.models.Notifications;
 import com.nagendra.platform.models.StockCategoryMapping;
 import com.nagendra.platform.service.*;
 import com.nagendra.platform.utils.CommonUtils;
@@ -21,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +40,7 @@ public class CompanyActionServiceImpl implements CompanyActionService {
 
   private final InstrumentService instrumentService;
 
-  private final StockService stockService;
+  private final CompanyService stockService;
 
   private final StockCategoryMappingService mappingService;
 
@@ -56,12 +58,15 @@ public class CompanyActionServiceImpl implements CompanyActionService {
 
   private final MomentumService momentumService;
 
+  private final NotificationService notificationService;
+
   @Override
   @Transactional
+  @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Kolkata")
   public void addQuarterlyStocks() {
 
-    LocalDate fromDate = LocalDate.now().plusDays(4);
-    LocalDate toDate = LocalDate.now().plusDays(4);
+    LocalDate fromDate = LocalDate.now().minusDays(2);
+    LocalDate toDate = LocalDate.now().minusDays(2);
 
     // Fetch today's board meetings
     List<BoardMeetings> meetings = livemintClient.fetchResults(fromDate, toDate);
@@ -117,6 +122,9 @@ public class CompanyActionServiceImpl implements CompanyActionService {
             .toList();
     mappingService.saveAll(categoryMappings);
     updateFundamentals(result.stream().map(Company::getIsin).toList());
+    Notifications notifications = new Notifications();
+    notifications.setMessage("Quarterly stocks added successfully :" + result.size());
+    notificationService.saveNotification(notifications);
   }
 
   private void updateFundamentals(List<String> list) {
