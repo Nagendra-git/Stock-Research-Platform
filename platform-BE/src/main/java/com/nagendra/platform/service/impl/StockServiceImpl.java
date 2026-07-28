@@ -2,7 +2,9 @@ package com.nagendra.platform.service.impl;
 
 import com.nagendra.platform.client.UpstockClient;
 import com.nagendra.platform.dto.AddStockRequestDto;
-import com.nagendra.platform.dto.BoughtStockDto;
+import com.nagendra.platform.dto.SoldStockDto;
+import com.nagendra.platform.dto.StackStatisticsDto;
+import com.nagendra.platform.dto.StockStatistics;
 import com.nagendra.platform.dto.client.MarketQuoteResponse;
 import com.nagendra.platform.dto.client.Quote;
 import com.nagendra.platform.enums.StockCategory;
@@ -10,14 +12,9 @@ import com.nagendra.platform.models.Company;
 import com.nagendra.platform.models.MomentumScore;
 import com.nagendra.platform.models.StockCategoryMapping;
 import com.nagendra.platform.repository.CompanyRepository;
-import com.nagendra.platform.service.InstrumentService;
-import com.nagendra.platform.service.MomentumService;
-import com.nagendra.platform.service.StockCategoryMappingService;
-import com.nagendra.platform.service.StockService;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.nagendra.platform.service.*;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,36 +36,30 @@ public class StockServiceImpl implements StockService {
 
   private final MomentumService momentumService;
 
+  private final StockStatisticsService stockStatisticsService;
+
   @Override
   @Transactional
   public void addStocks(AddStockRequestDto requestDto) {
 
-    Set<String> instrumentKeys = instrumentService.getInstrumentKeys(requestDto.getCompanyNames());
-    MarketQuoteResponse response = upstockClient.getStocksDetailedInfo(instrumentKeys);
+    String instrumentKey = instrumentService.getInstrumentKey(requestDto.getStockDetails());
+    MarketQuoteResponse response = upstockClient.getStocksDetailedInfo(Set.of(instrumentKey));
     Map<String, Quote> quoteMap =
         response.getData().values().stream()
             .collect(Collectors.toMap(Quote::getInstrumentToken, quote -> quote));
-    List<Company> companies = new ArrayList<>();
-    for (String key : instrumentKeys) {
-      Quote quote = quoteMap.get(key);
-      Company company = new Company();
-      company.setIsin(key);
-      company.setStockPrice(quote.getLastPrice());
-      companies.add(company);
-    }
-    List<Company> result = companyRepository.saveAll(companies);
+    Quote quote = quoteMap.get(instrumentKey);
+    Company company = new Company();
+    company.setIsin(instrumentKey);
+    company.setStockPrice(BigDecimal.valueOf(quote.getLastPrice()));
+    company.setBoughtPrice(requestDto.getStockDetails().getBoughtPrice());
+    company.setQuantity(requestDto.getStockDetails().getQuantity());
+    company.setSymbol(quote.getSymbol());
+    Company result = companyRepository.save(company);
     StockCategory stockCategory = StockCategory.fromString(requestDto.getStockCategory());
-    List<StockCategoryMapping> categoryMappings =
-        result.stream()
-            .map(
-                company -> {
-                  StockCategoryMapping mapping = new StockCategoryMapping();
-                  mapping.setCategory(stockCategory);
-                  mapping.setStockId(company.getId());
-                  return mapping;
-                })
-            .toList();
-    mappingService.saveAll(categoryMappings);
+    StockCategoryMapping mapping = new StockCategoryMapping();
+    mapping.setCategory(stockCategory);
+    mapping.setStockId(result.getId());
+    mappingService.saveMapping(mapping);
   }
 
   @Override
@@ -84,6 +75,7 @@ public class StockServiceImpl implements StockService {
     List<StockCategoryMapping> mappings = mappingService.getStockCategoryMappings();
     List<MomentumScore> momentumScores = momentumService.getMomentumScores();
     removeUnnecessaryCompanies(companies, mappings, momentumScores);
+    removeDuplicateCompanies(companies, mappings, momentumScores);
     Set<String> instrumentKeys =
         companies.stream().map(Company::getIsin).collect(Collectors.toSet());
     MarketQuoteResponse response = upstockClient.getStocksDetailedInfo(instrumentKeys);
@@ -97,7 +89,8 @@ public class StockServiceImpl implements StockService {
       Quote quote = quoteMap.get(instrumentKey);
 
       if (quote != null) {
-        company.setStockPrice(quote.getLastPrice());
+        company.setStockPrice(BigDecimal.valueOf(quote.getLastPrice()));
+        company.setSymbol(quote.getSymbol());
       }
     }
     companyRepository.saveAll(companies);
@@ -148,18 +141,109 @@ public class StockServiceImpl implements StockService {
 
   @Override
   @Transactional
-  public void updateStockData(String stockId, BoughtStockDto boughtStockDto) {
+  public void updateStockData(String stockId, SoldStockDto soldStockDto) {
     Company company = getById(stockId);
-    company.setBoughtPrice(boughtStockDto.getBoughtPrice());
-    company.setQuantity(boughtStockDto.getQuantity());
+    company.setSoldPrice(soldStockDto.getSoldPrice());
+    company.setQuantity(soldStockDto.getQuantity());
     companyRepository.save(company);
   }
 
   @Override
   @Transactional
   public List<Company> saveAll(List<Company> companies) {
-
     return companyRepository.saveAll(companies);
+  }
+
+  @Override
+  public StockStatistics calculateStats(String stockId) {
+    Company company = getById(stockId);
+    StackStatisticsDto dto = buildStackStatisticsDto(company);
+    return stockStatisticsService.calculateStats(dto);
+  }
+
+  @Override
+  public List<Company> getMyInvestmentStocks() {
+    List<String> stockIds = mappingService.getMyInvestmentStockIds();
+
+    if (stockIds.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    return companyRepository.findAllById(stockIds);
+  }
+
+  private StackStatisticsDto buildStackStatisticsDto(Company company) {
+    return StackStatisticsDto.builder()
+        .boughtPrice(company.getBoughtPrice())
+        .soldPrice(company.getSoldPrice())
+        .currentPrice(company.getStockPrice())
+        .quantity(company.getQuantity())
+        .build();
+  }
+
+  private void removeDuplicateCompanies(
+      List<Company> companies,
+      List<StockCategoryMapping> mappings,
+      List<MomentumScore> momentumScores) {
+
+    Map<String, List<Company>> companiesByIsin =
+        companies.stream()
+            .filter(company -> company.getIsin() != null)
+            .collect(Collectors.groupingBy(company -> getActualIsin(company.getIsin())));
+
+    List<Company> companiesToRemove = new ArrayList<>();
+
+    for (List<Company> companyList : companiesByIsin.values()) {
+
+      if (companyList.size() <= 1) {
+        continue;
+      }
+
+      boolean hasNse =
+          companyList.stream().anyMatch(company -> company.getIsin().startsWith("NSE_EQ|"));
+
+      // If both NSE and BSE exist, remove only BSE
+      if (hasNse) {
+        companyList.stream()
+            .filter(company -> company.getIsin().startsWith("BSE_EQ|"))
+            .forEach(companiesToRemove::add);
+      }
+    }
+
+    if (companiesToRemove.isEmpty()) {
+      return;
+    }
+
+    Set<String> companyIds =
+        companiesToRemove.stream().map(Company::getId).collect(Collectors.toSet());
+
+    Set<String> isinsToRemove =
+        companiesToRemove.stream().map(Company::getIsin).collect(Collectors.toSet());
+
+    List<StockCategoryMapping> mappingsToRemove =
+        mappings.stream().filter(mapping -> companyIds.contains(mapping.getStockId())).toList();
+
+    List<MomentumScore> momentumScoresToRemove =
+        momentumScores.stream().filter(score -> isinsToRemove.contains(score.getIsin())).toList();
+
+    // Delete from MongoDB
+    companyRepository.deleteAll(companiesToRemove);
+    mappingService.deleteAll(mappingsToRemove);
+    momentumService.deleteAll(momentumScoresToRemove);
+
+    // Remove from memory
+    companies.removeAll(companiesToRemove);
+    mappings.removeAll(mappingsToRemove);
+    momentumScores.removeAll(momentumScoresToRemove);
+  }
+
+  private String getActualIsin(String isin) {
+    if (isin == null) {
+      return null;
+    }
+
+    int index = isin.indexOf('|');
+    return index >= 0 ? isin.substring(index + 1) : isin;
   }
 
   private Company getById(String id) {

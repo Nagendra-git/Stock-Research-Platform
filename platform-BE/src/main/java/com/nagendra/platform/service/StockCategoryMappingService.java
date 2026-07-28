@@ -11,4 +11,8 @@ public interface StockCategoryMappingService {
   List<StockCategoryMapping> getStockCategoryMappings();
 
   void deleteAll(List<StockCategoryMapping> mappingsToRemove);
+
+  void saveMapping(StockCategoryMapping mapping);
+
+  List<String> getMyInvestmentStockIds();
 }

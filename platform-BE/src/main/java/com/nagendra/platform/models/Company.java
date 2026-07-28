@@ -1,5 +1,6 @@
 package com.nagendra.platform.models;
 
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
@@ -14,9 +15,13 @@ public class Company extends Audit {
 
   private String isin;
 
-  private Double stockPrice;
+  private BigDecimal stockPrice;
 
-  private Double boughtPrice;
+  private BigDecimal boughtPrice;
+
+  private BigDecimal soldPrice;
+
+  private String symbol;
 
   private Long quantity;
 

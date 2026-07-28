@@ -1,7 +1,8 @@
 package com.nagendra.platform.service;
 
 import com.nagendra.platform.dto.AddStockRequestDto;
-import com.nagendra.platform.dto.BoughtStockDto;
+import com.nagendra.platform.dto.SoldStockDto;
+import com.nagendra.platform.dto.StockStatistics;
 import com.nagendra.platform.dto.client.MarketQuoteResponse;
 import com.nagendra.platform.models.Company;
 import java.util.List;
@@ -15,7 +16,11 @@ public interface StockService {
 
   MarketQuoteResponse getStockInfo();
 
-  void updateStockData(String stockId, BoughtStockDto boughtStockDto);
+  void updateStockData(String stockId, SoldStockDto soldStockDto);
 
   List<Company> saveAll(List<Company> companies);
+
+  StockStatistics calculateStats(String id);
+
+  List<Company> getMyInvestmentStocks();
 }
