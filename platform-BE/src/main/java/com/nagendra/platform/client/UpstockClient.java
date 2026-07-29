@@ -129,13 +129,19 @@ public class UpstockClient {
 
   public PriceHistoryResponse getPriceHistory(String isin) {
 
-    String url = buildUrl(isin);
-    HttpEntity<Void> requestEntity = buildCommonRequestHeaders();
+    try {
+      String url = buildUrl(isin);
+      HttpEntity<Void> requestEntity = buildCommonRequestHeaders();
 
-    ResponseEntity<PriceHistoryResponse> response =
-        restTemplate.exchange(url, HttpMethod.GET, requestEntity, PriceHistoryResponse.class);
+      ResponseEntity<PriceHistoryResponse> response =
+          restTemplate.exchange(url, HttpMethod.GET, requestEntity, PriceHistoryResponse.class);
 
-    return response.getBody();
+      return response.getBody();
+
+    } catch (Exception e) {
+      log.info("Error fetching price history for ISIN {}:", isin);
+    }
+    return null;
   }
 
   private String buildUrl(String instrumentKey) {

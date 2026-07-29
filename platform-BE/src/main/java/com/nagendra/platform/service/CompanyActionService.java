@@ -8,4 +8,6 @@ public interface CompanyActionService {
   void getFundamentalScoreByIsIn(String isin);
 
   void getPriceScore(String isin);
+
+  void getShortTermScore(String isin);
 }

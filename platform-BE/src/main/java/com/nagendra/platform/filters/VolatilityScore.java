@@ -1,5 +1,6 @@
 package com.nagendra.platform.filters;
 
+
 import com.nagendra.platform.dto.client.Candles;
 import java.util.Comparator;
 import java.util.List;
@@ -107,5 +108,37 @@ public class VolatilityScore {
     }
 
     return baseScore;
+  }
+
+  public Double volatilityScore(
+          List<Candles> candles,
+          Integer timeDuration) {
+
+    candles.sort(Comparator.comparing(Candles::getDate));
+
+    int period = timeDuration * 5;
+
+    if (candles.size() < period + 1) {
+      return 0.0;
+    }
+
+    double totalMove = 0;
+
+    for (int i = candles.size() - period;
+         i < candles.size();
+         i++) {
+
+      if (i <= 0) {
+        continue;
+      }
+
+      double prev = candles.get(i - 1).getClose();
+      double curr = candles.get(i).getClose();
+
+      totalMove += Math.abs(
+              ((curr - prev) / prev) * 100.0);
+    }
+
+    return totalMove / period;
   }
 }

@@ -11,4 +11,6 @@ public interface MomentumService {
   List<MomentumScore> getMomentumScores();
 
   void deleteAll(List<MomentumScore> scoresToRemove);
+
+  void saveMomentumScores(List<MomentumScore> momentumScores);
 }

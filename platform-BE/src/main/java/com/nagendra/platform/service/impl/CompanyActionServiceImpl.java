@@ -62,7 +62,7 @@ public class CompanyActionServiceImpl implements CompanyActionService {
 
   @Override
   @Transactional
-  @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Kolkata")
+  @Scheduled(cron = "0 0 23 * * *", zone = "Asia/Kolkata")
   public void addQuarterlyStocks() {
 
     LocalDate fromDate = LocalDate.now().minusDays(2);
@@ -128,14 +128,24 @@ public class CompanyActionServiceImpl implements CompanyActionService {
   }
 
   private void updateFundamentals(List<String> list) {
+    List<MomentumScore> momentumScores = new ArrayList<>();
     for (String isin : list) {
-      updateFundamentalScore(isin);
+      Integer score = updateFundamentalScore(isin);
+      MomentumScore momentumScore = new MomentumScore();
+      momentumScore.setIsin(isin);
+      momentumScore.setFundamentalScore(score);
+      momentumScores.add(momentumScore);
     }
+    momentumService.saveMomentumScores(momentumScores);
   }
 
   @Override
   public void getFundamentalScoreByIsIn(String isin) {
-    updateFundamentalScore(isin);
+    Integer score = updateFundamentalScore(isin);
+    MomentumScore momentumScore = new MomentumScore();
+    momentumScore.setIsin(isin);
+    momentumScore.setFundamentalScore(score);
+    momentumService.saveMomentumScore(momentumScore);
   }
 
   @Override
@@ -143,6 +153,7 @@ public class CompanyActionServiceImpl implements CompanyActionService {
     PriceHistoryResponse priceHistoryResponse = upstockClient.getPriceHistory(isin);
     List<Candles> candles = priceHistoryResponse.getData().getCandles();
     MomentumScore score = momentumService.getMomentumScore(isin);
+
     Double priceScore = priceReturnScore.calculatePriceReturnScore(candles);
     score.setPriceScore(priceScore);
 
@@ -160,7 +171,10 @@ public class CompanyActionServiceImpl implements CompanyActionService {
     momentumService.saveMomentumScore(score);
   }
 
-  public void updateFundamentalScore(String instrumentKey) {
+  @Override
+  public void getShortTermScore(String isin) {}
+
+  public Integer updateFundamentalScore(String instrumentKey) {
 
     log.info("Instrument key is :{}", instrumentKey);
     String isin = CommonUtils.extractIsin(instrumentKey);
@@ -175,11 +189,7 @@ public class CompanyActionServiceImpl implements CompanyActionService {
 
     populateBalanceSheet(dto, upstockClient.getBalanceSheet(isin));
 
-    Integer score = fundamentalScoreCalc.getFundamentalScoreCalculator(dto);
-    MomentumScore momentumScore = new MomentumScore();
-    momentumScore.setIsin(instrumentKey);
-    momentumScore.setFundamentalScore(score);
-    momentumService.saveMomentumScore(momentumScore);
+    return fundamentalScoreCalc.getFundamentalScoreCalculator(dto);
   }
 
   private void populateIncomeStatement(

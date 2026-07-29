@@ -18,6 +18,13 @@ public class MomentumIndicator {
 
   private static final double RSI_MAX_SCORE = 5.0;
   private static final double MACD_MAX_SCORE = 5.0;
+  private static final double[] MOMENTUM_WEIGHTS_1 = {1.0};
+  private static final double[] MOMENTUM_WEIGHTS_2 = {0.7, 0.3};
+  private static final double[] MOMENTUM_WEIGHTS_3 = {0.6, 0.25, 0.15};
+  private static final double[] MOMENTUM_WEIGHTS_4 = {0.5, 0.25, 0.15, 0.10};
+
+  private static final List<double[]> MOMENTUM_WEIGHTS =
+      List.of(MOMENTUM_WEIGHTS_1, MOMENTUM_WEIGHTS_2, MOMENTUM_WEIGHTS_3, MOMENTUM_WEIGHTS_4);
 
   public double calculateMomentumScore(List<Candles> candles) {
 
@@ -157,5 +164,33 @@ public class MomentumIndicator {
     }
 
     return result;
+  }
+
+  public Double momentumScore(List<Candles> candles, Integer timeDuration) {
+
+    candles.sort(Comparator.comparing(Candles::getDate));
+
+    if (candles.size() < 35) {
+      return 0.0;
+    }
+
+    double[] weights = MOMENTUM_WEIGHTS.get(Math.min(timeDuration, MOMENTUM_WEIGHTS.size()) - 1);
+
+    double score = 0.0;
+
+    for (int week = 0; week < weights.length; week++) {
+
+      int endIndex = candles.size() - (week * 5);
+
+      if (endIndex < 35) {
+        break;
+      }
+
+      List<Candles> subCandles = candles.subList(0, endIndex);
+
+      score += calculateMomentumScore(subCandles) * weights[week];
+    }
+
+    return score;
   }
 }
