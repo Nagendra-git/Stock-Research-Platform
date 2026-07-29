@@ -1,5 +1,7 @@
 package com.nagendra.platform.filters;
 
+import static com.nagendra.platform.constants.UpstoxResourceProfileConstants.WEEK_WEIGHTS;
+
 import com.nagendra.platform.dto.client.Candles;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class PriceReturnScore {
+
   public double calculatePriceReturnScore(List<Candles> candles) {
 
     candles.sort(Comparator.comparing(Candles::getDate));
@@ -70,5 +73,45 @@ public class PriceReturnScore {
     double bounded = Math.clamp(rawScore, min, max);
 
     return ((bounded - min) / (max - min)) * 25.0;
+  }
+
+  public Double priceReturnScore(List<Candles> candles, Integer timeDuration) {
+
+    candles.sort(Comparator.comparing(Candles::getDate));
+
+    if (candles.size() < 6) {
+      return 0.0;
+    }
+
+    double current = candles.getLast().getClose();
+    double score = 0.0;
+
+    for (int week = 0; week < Math.min(timeDuration, WEEK_WEIGHTS.size()); week++) {
+
+      score += calculateWeekScore(current, candles, WEEK_WEIGHTS.get(week), (week * 5) + 1);
+    }
+
+    return score;
+  }
+
+  private double calculateWeekScore(
+      double current, List<Candles> candles, double[] weights, int offset) {
+
+    double score = 0.0;
+
+    for (int day = 0; day < weights.length; day++) {
+
+      int candleIndex = candles.size() - 1 - offset - day;
+
+      if (candleIndex < 0) {
+        break;
+      }
+
+      double previous = candles.get(candleIndex).getClose();
+
+      score += calculateReturn(current, previous) * weights[day];
+    }
+
+    return score;
   }
 }

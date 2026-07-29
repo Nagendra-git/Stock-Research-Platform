@@ -31,4 +31,9 @@ public class MomentumServiceImpl implements MomentumService {
   public void deleteAll(List<MomentumScore> scoresToRemove) {
     scoreRepository.deleteAll(scoresToRemove);
   }
+
+  @Override
+  public void saveMomentumScores(List<MomentumScore> momentumScores) {
+    scoreRepository.saveAll(momentumScores);
+  }
 }

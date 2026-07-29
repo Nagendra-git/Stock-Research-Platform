@@ -8,6 +8,7 @@ import com.nagendra.platform.models.MomentumScore;
 import com.nagendra.platform.models.StockCategoryMapping;
 import com.nagendra.platform.repository.CompanyRepository;
 import com.nagendra.platform.service.*;
+import com.nagendra.platform.utils.IsinUtils;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -111,23 +112,27 @@ public class CompanyServiceImpl implements CompanyService {
     Map<String, List<Company>> companiesByIsin =
             companies.stream()
                     .filter(company -> company.getIsin() != null)
-                    .collect(Collectors.groupingBy(company -> getActualIsin(company.getIsin())));
+                    .collect(Collectors.groupingBy(
+                            company -> IsinUtils.extractIsin(company.getIsin())));
 
     List<Company> companiesToRemove = new ArrayList<>();
 
     for (List<Company> companyList : companiesByIsin.values()) {
 
       if (companyList.size() <= 1) {
-        continue;
+        continue; // Only one listing (NSE or BSE), keep it.
       }
 
-      boolean hasNse =
-              companyList.stream().anyMatch(company -> company.getIsin().startsWith("NSE_EQ|"));
+      boolean hasNse = companyList.stream()
+              .anyMatch(company -> IsinUtils.isNse(company.getIsin()));
 
-      // If both NSE and BSE exist, remove only BSE
-      if (hasNse) {
+      boolean hasBse = companyList.stream()
+              .anyMatch(company -> IsinUtils.isBse(company.getIsin()));
+
+      // Remove BSE only if both NSE and BSE exist
+      if (hasNse && hasBse) {
         companyList.stream()
-                .filter(company -> company.getIsin().startsWith("BSE_EQ|"))
+                .filter(company -> IsinUtils.isBse(company.getIsin()))
                 .forEach(companiesToRemove::add);
       }
     }
@@ -136,17 +141,21 @@ public class CompanyServiceImpl implements CompanyService {
       return;
     }
 
-    Set<String> companyIds =
-            companiesToRemove.stream().map(Company::getId).collect(Collectors.toSet());
+    Set<String> companyIds = companiesToRemove.stream()
+            .map(Company::getId)
+            .collect(Collectors.toSet());
 
-    Set<String> isinsToRemove =
-            companiesToRemove.stream().map(Company::getIsin).collect(Collectors.toSet());
+    Set<String> isinsToRemove = companiesToRemove.stream()
+            .map(Company::getIsin)
+            .collect(Collectors.toSet());
 
-    List<StockCategoryMapping> mappingsToRemove =
-            mappings.stream().filter(mapping -> companyIds.contains(mapping.getStockId())).toList();
+    List<StockCategoryMapping> mappingsToRemove = mappings.stream()
+            .filter(mapping -> companyIds.contains(mapping.getStockId()))
+            .toList();
 
-    List<MomentumScore> momentumScoresToRemove =
-            momentumScores.stream().filter(score -> isinsToRemove.contains(score.getIsin())).toList();
+    List<MomentumScore> momentumScoresToRemove = momentumScores.stream()
+            .filter(score -> isinsToRemove.contains(score.getIsin()))
+            .toList();
 
     // Delete from MongoDB
     companyRepository.deleteAll(companiesToRemove);
@@ -158,16 +167,6 @@ public class CompanyServiceImpl implements CompanyService {
     mappings.removeAll(mappingsToRemove);
     momentumScores.removeAll(momentumScoresToRemove);
   }
-
-  private String getActualIsin(String isin) {
-    if (isin == null) {
-      return null;
-    }
-
-    int index = isin.indexOf('|');
-    return index >= 0 ? isin.substring(index + 1) : isin;
-  }
-
   private Company getById(String id) {
     return companyRepository.findById(id).orElseThrow();
   }

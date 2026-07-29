@@ -58,4 +58,16 @@ public class InstrumentServiceImpl implements InstrumentService {
     List<Instrument> instruments = mongoTemplate.find(query, Instrument.class);
     return instruments.isEmpty() ? "" : instruments.get(0).getInstrumentKey();
   }
+
+  @Override
+  public List<Instrument> getAllInstruments(Double lp, Double up) {
+    Query query = new Query();
+
+    query.addCriteria(Criteria.where("last_price").gt(lp).lt(up).ne(0));
+
+    return mongoTemplate.find(query, Instrument.class);
+  }
+
+  @Override
+  public void saveAll(List<Instrument> instruments) {}
 }

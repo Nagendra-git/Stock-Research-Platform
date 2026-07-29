@@ -56,4 +56,25 @@ public class TrendScore {
         .average()
         .orElse(0.0);
   }
+
+  public Double trendScore(List<Candles> candles, Integer timeDuration) {
+
+    candles.sort(Comparator.comparing(Candles::getDate));
+
+    int period = timeDuration * 5;
+
+    if (candles.size() < period) {
+      return 0.0;
+    }
+
+    double current = candles.getLast().getClose();
+
+    double sma =
+        candles.subList(candles.size() - period, candles.size()).stream()
+            .mapToDouble(Candles::getClose)
+            .average()
+            .orElse(0);
+
+    return ((current - sma) / sma) * 100.0;
+  }
 }
