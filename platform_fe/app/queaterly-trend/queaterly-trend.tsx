@@ -1,4 +1,4 @@
-export default function HelpSupportPage() {
+export default function QueaterlyTrend() {
   return (
     <div>
       <h1>Help & Support</h1>

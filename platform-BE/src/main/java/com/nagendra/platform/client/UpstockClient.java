@@ -139,14 +139,14 @@ public class UpstockClient {
       return response.getBody();
 
     } catch (Exception e) {
-      log.info("Error fetching price history for ISIN {}:", isin);
+      log.info("Error fetching price history for ISIN {}", isin);
     }
     return null;
   }
 
   private String buildUrl(String instrumentKey) {
     LocalDate toDate = LocalDate.now();
-    LocalDate fromDate = toDate.minusMonths(6);
+    LocalDate fromDate = toDate.minusMonths(7);
 
     return String.format(
         "https://api.upstox.com/v3/historical-candle/%s/days/1/%s/%s",

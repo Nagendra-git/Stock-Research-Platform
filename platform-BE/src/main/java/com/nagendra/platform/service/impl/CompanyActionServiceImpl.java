@@ -171,9 +171,6 @@ public class CompanyActionServiceImpl implements CompanyActionService {
     momentumService.saveMomentumScore(score);
   }
 
-  @Override
-  public void getShortTermScore(String isin) {}
-
   public Integer updateFundamentalScore(String instrumentKey) {
 
     log.info("Instrument key is :{}", instrumentKey);

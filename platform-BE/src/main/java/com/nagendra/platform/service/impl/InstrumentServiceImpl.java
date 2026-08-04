@@ -2,10 +2,13 @@ package com.nagendra.platform.service.impl;
 
 import com.nagendra.platform.dto.StockDetailsDto;
 import com.nagendra.platform.models.Instrument;
+import com.nagendra.platform.repository.InstrumentRepository;
 import com.nagendra.platform.service.InstrumentService;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class InstrumentServiceImpl implements InstrumentService {
 
   private final MongoTemplate mongoTemplate;
+  private final InstrumentRepository instrumentRepository;
 
   @Override
   public Set<String> getInstrumentKeys(List<String> companyNames) {
@@ -70,4 +74,13 @@ public class InstrumentServiceImpl implements InstrumentService {
 
   @Override
   public void saveAll(List<Instrument> instruments) {}
+
+  @Override
+  public Map<String, Instrument> getAllInstrumentsByIsIn(Set<String> isins) {
+
+    List<Instrument> instruments = instrumentRepository.findByInstrumentKeyIn(isins);
+
+    return instruments.stream()
+        .collect(Collectors.toMap(Instrument::getInstrumentKey, Function.identity()));
+  }
 }

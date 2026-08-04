@@ -13,8 +13,8 @@ import {
   Newspaper,
   Globe,
   Bell,
-  HelpCircle,
-  SlidersHorizontal,
+  ChartNoAxesCombined,
+  TrendingUp,
   type LucideIcon,
 } from "lucide-react";
 import "../styles/sidebar.css";
@@ -38,6 +38,8 @@ const moneyManagementNav: NavItem[] = [
 ];
 
 const insightsNav: NavItem[] = [
+  { label: "Weekly Trend", icon: TrendingUp, href: "/weekly-trend" },
+  { label: "Queterly Trend", icon: ChartNoAxesCombined, href: "/queaterly-trend" },
   { label: "Reports & Analytics", icon: FileBarChart, href: "/reports-analytics" },
   { label: "News Digest", icon: Newspaper, href: "/news-digest" },
   { label: "Community Insights", icon: Globe, href: "/community-insights" },
@@ -45,8 +47,6 @@ const insightsNav: NavItem[] = [
 
 const supportNav: NavItem[] = [
   { label: "Notifications", icon: Bell, href: "/notifications" },
-  { label: "Help & Support", icon: HelpCircle, href: "/help-support" },
-  { label: "Settings", icon: SlidersHorizontal, href: "/settings" },
 ];
 
 function Brand() {
