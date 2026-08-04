@@ -39,7 +39,7 @@ public class PlatformScheduler {
     return result;
   }
 
-  @Scheduled(cron = "0 0 1 * * *", zone = "Asia/Kolkata")
+  @Scheduled(cron = "0 52 16 * * *", zone = "Asia/Kolkata")
   public void fetchDailyCandles() {
     log.info("Scheduler started ......");
     weeklyStockService.removeAllStocks();
@@ -131,7 +131,7 @@ public class PlatformScheduler {
     momentumService.addWeeklyMomentum(instruments);
   }
 
-  @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Kolkata")
+  //  @Scheduled(cron = "0 0 7 * * *", zone = "Asia/Kolkata")
   public void updateWeeklyScore() {
     log.info("Processing weekly stocks to update weekly momentum scores");
     List<WeeklyStocks> stocks = weeklyStockService.getAllStocks();
@@ -166,7 +166,7 @@ public class PlatformScheduler {
 
       for (WeeklyStocks stock : subBatches.get(i)) {
         try {
-          momentumService.updateWeeklyTrendInMemory(stock);
+          // Todo we can do other scheduler if we want
         } catch (Exception e) {
           log.error("Failed to process {}", stock.getIsin());
         }

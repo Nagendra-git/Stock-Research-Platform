@@ -1,6 +1,5 @@
 package com.nagendra.platform.filters;
 
-import com.nagendra.platform.dto.Weekly.BasicResponseDto;
 import com.nagendra.platform.dto.client.Candles;
 import com.nagendra.platform.dto.filters.TrendAnalysisResponse;
 import com.nagendra.platform.dto.filters.WeeklyTrendScore;
@@ -59,31 +58,34 @@ public class WeeklyMomentumFilter {
 
     WeeklyTrendScore score = new WeeklyTrendScore();
     Double priceScore = priceReturnScore.priceReturnScore(candles, timeDuration);
-
     Double volumeScoreValue = volumeScore.volumeScore(candles, timeDuration);
-
+    // Actual percentage movement
+    Double weeklyPricePerc = priceReturnScore.priceStrength(candles, 5);
+    Double monthlyPricePerc = priceReturnScore.priceStrength(candles, 21);
+    Double weeklyVolumePerc = volumeScore.volumeStrength(candles, 5, 20);
+    Double monthlyVolumePerc = volumeScore.volumeStrength(candles, 21, 63);
     Double trendScoreValue = trendScore.trendScore(candles, timeDuration);
-
     Double momentumScoreValue = momentumIndicator.momentumScore(candles, timeDuration);
-
     Double volatilityScoreValue = volatilityScore.volatilityScore(candles, timeDuration);
-
+    // Double buyingStrength = calculateBuyingStrength(weeklyPricePerc, weeklyVolumePerc);
     score.setPriceScore(priceScore);
     score.setVolumeScore(volumeScoreValue);
+    score.setWeeklyPricePerc(weeklyPricePerc);
+    score.setMonthlyPricePerc(monthlyPricePerc);
+    score.setWeeklyVolumePerc(weeklyVolumePerc);
+    score.setMonthlyVolumePerc(monthlyVolumePerc);
+    // score.setBuyingStrengthScore(buyingStrength);
     score.setTrendScore(trendScoreValue);
     score.setMomentumScore(momentumScoreValue);
     score.setVolatilityScore(volatilityScoreValue);
-
-    // Overall weekly ranking score
     double overall =
-        (priceScore * 0.30)
-            + (volumeScoreValue * 0.20)
+        (priceScore * 0.20)
+            + (volumeScoreValue * 0.10)
+            // + (buyingStrength * 0.30)
             + (trendScoreValue * 0.20)
-            + (momentumScoreValue * 0.20)
-            + (volatilityScoreValue * 0.10);
-
+            + (momentumScoreValue * 0.15)
+            + (volatilityScoreValue * 0.05);
     score.setOverallScore(overall);
-
     return score;
   }
 
@@ -110,26 +112,5 @@ public class WeeklyMomentumFilter {
   private double calculateReturn(double current, double previous) {
     return ((current - previous) / previous) * 100.0;
   }
-
-  public List<BasicResponseDto> getWeeklyStocks() {
-
-    return weeklyMap.values().stream()
-        .filter(
-            response -> response.getWeeklyScores() != null && response.getMonthlyScores() != null)
-        .sorted(
-            Comparator.comparingDouble(
-                    (TrendAnalysisResponse response) ->
-                        response.getWeeklyScores().getOverallScore())
-                .reversed()
-                .thenComparingDouble(response -> response.getMonthlyScores().getOverallScore()))
-        .map(
-            response -> {
-              BasicResponseDto dto = new BasicResponseDto();
-              dto.setIsin(response.getIsin());
-              dto.setWeeklyScore(response.getWeeklyScores().getOverallScore());
-              dto.setMonthlyScore(response.getMonthlyScores().getOverallScore());
-              return dto;
-            })
-        .toList();
-  }
+  
 }

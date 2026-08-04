@@ -114,4 +114,29 @@ public class PriceReturnScore {
 
     return score;
   }
+
+  public Double priceStrength(List<Candles> candles, int period) {
+
+    candles.sort(Comparator.comparing(Candles::getDate));
+
+    if (candles.size() <= period) {
+      return 0.0;
+    }
+
+    double currentPrice = candles.getLast().getClose();
+
+    double averagePrice =
+        candles.subList(candles.size() - period - 1, candles.size() - 1).stream()
+            .mapToDouble(Candles::getClose)
+            .average()
+            .orElse(0);
+
+    if (averagePrice == 0) {
+      return 0.0;
+    }
+
+    return ((currentPrice - averagePrice) / averagePrice) * 100;
+  }
+
+
 }

@@ -1,9 +1,9 @@
 package com.nagendra.platform.service;
 
-import com.nagendra.platform.dto.Weekly.BasicResponseDto;
+import com.nagendra.platform.dto.Weekly.WeeklyMomentumPageResponse;
 import com.nagendra.platform.dto.filters.TrendAnalysisResponse;
+import com.nagendra.platform.dto.filters.WeeklyBuyerSellerAnalysis;
 import com.nagendra.platform.models.Instrument;
-import com.nagendra.platform.models.WeeklyStocks;
 import java.util.List;
 
 public interface WeeklyMomentumService {
@@ -12,7 +12,8 @@ public interface WeeklyMomentumService {
 
   void addWeeklyMomentum(List<Instrument> instruments);
 
-  List<BasicResponseDto> getWeeklyMomentumForAll();
+  WeeklyMomentumPageResponse getWeeklyMomentumForAll(
+      int page, int size, String sortBy, String direction);
 
-  void updateWeeklyTrendInMemory(WeeklyStocks stock);
+  WeeklyBuyerSellerAnalysis addWeeklyAnalysis(String isin);
 }

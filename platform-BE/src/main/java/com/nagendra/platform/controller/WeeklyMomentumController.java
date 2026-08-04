@@ -1,10 +1,9 @@
 package com.nagendra.platform.controller;
 
-import com.nagendra.platform.dto.Weekly.BasicResponseDto;
+import com.nagendra.platform.dto.Weekly.WeeklyMomentumPageResponse;
 import com.nagendra.platform.dto.filters.TrendAnalysisResponse;
+import com.nagendra.platform.dto.filters.WeeklyBuyerSellerAnalysis;
 import com.nagendra.platform.service.WeeklyMomentumService;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +24,21 @@ public class WeeklyMomentumController {
   }
 
   @PostMapping
-  public ResponseEntity<String> addWeeklyMomentum() {
-    weeklyMomentumService.addWeeklyMomentum(new ArrayList<>());
-    return ResponseEntity.ok("Successfully added weekly momentum");
+  public ResponseEntity<WeeklyBuyerSellerAnalysis> addWeeklyMomentum(@RequestParam String isin) {
+    WeeklyBuyerSellerAnalysis analysis = weeklyMomentumService.addWeeklyAnalysis(isin);
+    return ResponseEntity.ok(analysis);
   }
 
   @GetMapping("/all")
-  public ResponseEntity<List<BasicResponseDto>> getWeeklyMomentumForAll() {
-    List<BasicResponseDto> momentumList = weeklyMomentumService.getWeeklyMomentumForAll();
+  public ResponseEntity<WeeklyMomentumPageResponse> getWeeklyMomentumForAll(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "20") int size,
+      @RequestParam(defaultValue = "swingScore") String sortBy,
+      @RequestParam(defaultValue = "desc") String direction) {
+
+    WeeklyMomentumPageResponse momentumList =
+        weeklyMomentumService.getWeeklyMomentumForAll(page, size, sortBy, direction);
+
     return ResponseEntity.ok(momentumList);
   }
 }

@@ -1,0 +1,7 @@
+2026-07-28 07:55:22,870 | INFO | StockAI | GET None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29
+2026-07-28 07:55:22,881 | WARNING | StockAI | get failed (attempt 1/3) Invalid URL 'None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29': No scheme supplied. Perhaps you meant https://None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29?
+2026-07-28 07:55:24,882 | INFO | StockAI | GET None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29
+2026-07-28 07:55:24,883 | WARNING | StockAI | get failed (attempt 2/3) Invalid URL 'None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29': No scheme supplied. Perhaps you meant https://None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29?
+2026-07-28 07:55:28,887 | INFO | StockAI | GET None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29
+2026-07-28 07:55:28,888 | WARNING | StockAI | get failed (attempt 3/3) Invalid URL 'None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29': No scheme supplied. Perhaps you meant https://None/v3/historical-candle/NSE_EQ|INE848E01016/days/1/2026-07-28/2025-07-29?
+2026-07-28 07:55:28,889 | ERROR | StockAI | get failed permanently.

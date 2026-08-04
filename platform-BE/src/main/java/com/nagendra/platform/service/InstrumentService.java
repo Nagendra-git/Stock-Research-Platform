@@ -3,6 +3,7 @@ package com.nagendra.platform.service;
 import com.nagendra.platform.dto.StockDetailsDto;
 import com.nagendra.platform.models.Instrument;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface InstrumentService {
@@ -13,4 +14,6 @@ public interface InstrumentService {
   List<Instrument> getAllInstruments(Double lp, Double up);
 
   void saveAll(List<Instrument> instruments);
+
+  Map<String, Instrument> getAllInstrumentsByIsIn(Set<String> isins);
 }

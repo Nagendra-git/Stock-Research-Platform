@@ -1,31 +1,47 @@
 package com.nagendra.platform.models;
 
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigDecimal;
-
 @Data
 @Document("weekly_stocks")
 @EqualsAndHashCode(callSuper = false)
-public class WeeklyStocks extends Audit{
+public class WeeklyStocks extends Audit {
 
-    @Id
-    private String id;
+  @Id private String id;
 
-    private String isin;
+  private String isin;
 
-    private BigDecimal stockPrice;
+  private Double weeklyPricePercentage;
 
-    private String symbol;
+  private Double weeklyVolumePercentage;
 
-    private Double weeklyScore;
+  private Double weeklyTurnoverPercentage;
 
-    private Boolean isMomentumScore;
+  private Double buyerSellerScore;
 
-    private Boolean isFundamentalScore;
+  private Double monthlyPricePercentage;
 
-    private Double expectedQuarterlyResults;
+  private Double monthlyVolumePercentage;
+
+  private Double monthlyTurnoverPercentage;
+
+  private Double monthlyBuyerSellerScore;
+  private Double sixMonthPricePercentage;
+  private Double sixMonthBuyerSellerScore;
+  private Double sixMonthTurnoverPercentage;
+  private Double sixMonthVolumePercentage;
+
+  private Double threeMonthPricePercentage;
+  private Double threeMonthTurnoverPercentage;
+  private Double threeMonthVolumePercentage;
+  private Double threeMonthBuyerSellerScore;
+
+  private Double swingScore;
+  private Double pastThreeDaysPricePercentage;
+
+  private List<String> tradingCategories;
 }

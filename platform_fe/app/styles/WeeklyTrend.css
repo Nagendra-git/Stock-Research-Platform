@@ -1,0 +1,172 @@
+/* WeeklyTrend.css */
+
+.weekly-container {
+  width: 100%;
+  padding: 20px;
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.weekly-title {
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.weekly-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.weekly-table thead {
+  background-color: #2563eb;
+  color: white;
+}
+
+.weekly-table thead th {
+  padding: 16px 18px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.weekly-table thead th:hover {
+  background-color: #1d4ed8;
+}
+
+.weekly-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+.weekly-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.weekly-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.weekly-table tbody tr:hover {
+  background-color: #e0f2fe;
+}
+
+.weekly-table td {
+  padding: 16px 18px;
+  text-align: center;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.stock-name {
+  text-align: left !important;
+  font-weight: 600;
+}
+
+.positive {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.negative {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.high-score {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.medium-score {
+  color: #ca8a04;
+  font-weight: bold;
+}
+
+.low-score {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+/* Pagination */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.pagination button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+  .weekly-container {
+    padding: 15px;
+  }
+
+  .weekly-title {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .weekly-table thead th,
+  .weekly-table td {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .pagination {
+    gap: 10px;
+  }
+
+  .pagination button {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .pagination span {
+    font-size: 13px;
+  }
+}
