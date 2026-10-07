@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+// =====================================================================
+// IMPORTANT
+// This file was reconstructed from Upstox's published V3 field
+// documentation (names) plus observed real client decodes (nesting/
+// oneof shape). Field NAMES are verified. Field NUMBERS (the "= 1",
+// "= 2" tags) are NOT guaranteed to match Upstox's real .proto byte
+// for byte, because Anthropic tools cannot download the binary/proto
+// file directly.
+//
+// BEFORE RELYING ON THIS IN PRODUCTION:
+//   1. Go to https://upstox.com/developer/api-documentation/v3/get-market-data-feed/
+//   2. Download the actual "Market Data V3 Proto" file linked there.
+//   3. Replace this file with it verbatim (keep the same filename or
+//      update the import/plugin config below if the filename differs).
+//   4. Re-run `mvn generate-sources` and recompile.
+// The rest of this codebase only depends on generated Java method
+// names (getLtpc(), getMarketFF(), etc.), which are stable across
+// proto revisions as long as field *names* don't change - so step 3
+// should be a drop-in replacement.
+// =====================================================================
+
+package com.upstox.marketdatafeeder.rpc.proto;
+
+option java_package = "com.upstox.marketdatafeeder.rpc.proto";
+option java_outer_classname = "MarketDataFeedV3";
+option java_multiple_files = true;
+
+message LTPC {
+  double ltp = 1;
+  int64 ltt = 2;
+  int64 ltq = 3;
+  double cp = 4;
+}
+
+message Quote {
+  int64 bidQ = 1;
+  double bidP = 2;
+  int64 askQ = 3;
+  double askP = 4;
+}
+
+message MarketLevel {
+  repeated Quote bidAskQuote = 1;
+}
+
+message OptionGreeks {
+  double delta = 1;
+  double theta = 2;
+  double gamma = 3;
+  double vega = 4;
+  double rho = 5;
+}
+
+message OHLC {
+  string interval = 1;
+  double open = 2;
+  double high = 3;
+  double low = 4;
+  double close = 5;
+  int64 vol = 6;
+  int64 ts = 7;
+}
+
+message MarketOHLC {
+  repeated OHLC ohlc = 1;
+}
+
+message MarketFullFeed {
+  LTPC ltpc = 1;
+  MarketLevel marketLevel = 2;
+  OptionGreeks optionGreeks = 3;
+  MarketOHLC marketOHLC = 4;
+  double atp = 5;
+  int64 vtt = 6;
+  int64 oi = 7;
+  double iv = 8;
+  int64 tbq = 9;
+  int64 tsq = 10;
+}
+
+message IndexFullFeed {
+  LTPC ltpc = 1;
+  MarketOHLC marketOHLC = 2;
+}
+
+message FullFeed {
+  oneof FullFeedUnion {
+    MarketFullFeed marketFF = 1;
+    IndexFullFeed indexFF = 2;
+  }
+}
+
+message FirstLevelWithGreeks {
+  LTPC ltpc = 1;
+  Quote firstDepth = 2;
+  OptionGreeks optionGreeks = 3;
+  int64 vtt = 4;
+  int64 oi = 5;
+  double iv = 6;
+}
+
+message Feed {
+  oneof FeedUnion {
+    LTPC ltpc = 1;
+    FullFeed fullFeed = 2;
+    FirstLevelWithGreeks firstLevelWithGreeks = 3;
+  }
+}
+
+message MarketInfo {
+  map<string, string> segmentStatus = 1;
+}
+
+message FeedResponse {
+  enum Type {
+    initial_feed = 0;
+    live_feed = 1;
+    market_info = 2;
+  }
+  Type type = 1;
+  map<string, Feed> feeds = 2;
+  int64 currentTs = 3;
+  MarketInfo marketInfo = 4;
+}
